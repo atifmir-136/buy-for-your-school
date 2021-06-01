@@ -21,11 +21,24 @@ class JourneysController < ApplicationController
 
   def new
     journey = CreateJourney.new(category_id: ENV["CONTENTFUL_DEFAULT_CATEGORY_ENTRY_ID"], user: current_user).call
+    RecordAction.new(
+      action: "begin_journey",
+      journey_id: journey.id,
+      user_id: current_user.id,
+      contentful_category_id: ENV["CONTENTFUL_DEFAULT_CATEGORY_ENTRY_ID"]
+    ).call
     redirect_to journey_path(journey)
   end
 
   def show
     @journey = current_journey
     @sections = @journey.sections.includes(:tasks)
+
+    RecordAction.new(
+      action: "view_journey",
+      journey_id: @journey.id,
+      user_id: current_user.id,
+      contentful_category_id: @journey.contentful_id
+    ).call
   end
 end
