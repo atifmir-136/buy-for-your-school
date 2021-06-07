@@ -3,4 +3,6 @@ class SingleDateAnswer < ActiveRecord::Base
   belongs_to :step
 
   validates :response, presence: {message: I18n.t("activerecord.errors.models.single_date_answer.attributes.response")}
+
+  validates_with DateValidator
 end
