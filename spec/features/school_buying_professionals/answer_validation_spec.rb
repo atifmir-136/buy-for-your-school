@@ -17,7 +17,6 @@ feature "Validation criteria is question specific" do
 
     context "when date is within bounds" do
       specify do
-
         fill_in "answer[response(3i)]", with: "30"
         fill_in "answer[response(2i)]", with: "6"
         fill_in "answer[response(1i)]", with: "3001"
@@ -42,5 +41,4 @@ feature "Validation criteria is question specific" do
       end
     end
   end
-
 end

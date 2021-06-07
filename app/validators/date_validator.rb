@@ -21,7 +21,6 @@
 #   - When were you born?                                   -> past (new)
 #
 class DateValidator < ActiveModel::Validator
-
   def validate(record)
     return unless record.step.respond_to?(:raw)
     fields = record.step.raw.fetch("fields", {})
