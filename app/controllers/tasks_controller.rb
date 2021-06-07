@@ -6,6 +6,15 @@ class TasksController < ApplicationController
     @task = Task.find(task_id)
     steps = @task.eager_loaded_visible_steps.ordered
     @steps = steps.map { |step| StepPresenter.new(step) }
+
+    RecordAction.new(
+      action: "view_task",
+      journey_id: @journey.id,
+      user_id: current_user.id,
+      contentful_category_id: @journey.contentful_id,
+      contentful_section_id: task.section.contentful_id,
+      contentful_task_id: task.id
+    ).call
   end
 
   private
@@ -21,6 +30,17 @@ class TasksController < ApplicationController
   def redirect_to_first_step_if_task_has_no_answers
     return unless task.answered_questions_count.zero?
     return if params.fetch(:back_link, nil).present?
+
+    @journey = current_journey
+
+    RecordAction.new(
+      action: "begin_task",
+      journey_id: @journey.id,
+      user_id: current_user.id,
+      contentful_category_id: @journey.contentful_id,
+      contentful_section_id: task.section.contentful_id,
+      contentful_task_id: task.id
+    ).call
 
     redirect_to journey_step_path(current_journey, task.next_unanswered_step_id)
   end
